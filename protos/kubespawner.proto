@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+option java_multiple_files = true;
+option java_package = "org.hopenly.ilyde.grpc";
+option java_outer_classname = "KubeSpawnerProto";
+option objc_class_prefix = "KSS";
+
+package kubespawner;
+
+// The KubeSpawner service definition. 
+// This service create, delete and handle  kubernetes resources
+service KubeSpawnerServices {
+    // create deployment from file definitions yaml
+    rpc CreateDeploymentFromFile (File) returns (Status) {}
+    //  Create ingress from file definition yaml
+    rpc CreateIngressFromFile (File) returns (Status) {}
+    //  Create service from file definition yaml
+    rpc CreateServiceFromFile (File) returns (Status) {}
+    // Create cronjob
+    rpc CreateCronJobFromFile (File) returns (Status) {}
+    // create job from file definitions yaml
+    rpc CreateJobFromFile (File) returns (Status) {}
+    // Create service
+    rpc CreateService (Service) returns (Status) {}
+    // Delete deployment resource
+    rpc DeleteDeployment (Resource) returns (Status) {}
+    // Delete Service resource
+    rpc DeleteService (Resource) returns (Status) {}
+    // Delete Ingress resource
+    rpc DeleteIngress (Resource) returns (Status) {}
+    // Create PVC
+    rpc CreatePVCFromFile (File) returns (Status) {}
+    // Get resource's status
+    rpc GetResourceStatus (Resource) returns (google.protobuf.Struct) {}
+    // Delete Job resource
+    rpc DeleteJob (Resource) returns (Status) {}
+    // Delete Job resource
+    rpc DeleteCronJob (Resource) returns (Status) {}
+    // Delete PVC
+    rpc DeletePVC (Resource) returns (Status) {}
+}
+
+enum ResourceType {
+    DEPLOYMENT = 0;
+    INGRESS = 1;
+    SERVICE = 2;
+    POD = 3;
+    JOB = 4;
+    CRONJOB = 5;
+    PVC = 6;
+}
+
+// message File YAML with kubernetes definitions
+message File {
+    string namespace = 1;
+    string content = 2; // Yaml serialize string
+}
+
+// message Ingress: define variable useful to create Service Resource
+message Service {
+    string namespace = 1;
+    string name = 2;
+    string selector = 3; // json serialize string
+    string port = 4;
+    string target = 5; // target port
+}
+
+// message Resource: identify a Kubernetes Resource
+message Resource {
+    string namespace = 1;
+    string name = 2;
+    string type = 3;
+}
+
+// message OperationStatus
+message Status {
+    uint32 status = 1;
+    string message = 2;
+}

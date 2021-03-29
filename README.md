@@ -1,3 +1,2 @@
-# kubespawner-services
+# ilyde-kubespawner
 
-gRPC service per interfacciare Ilyde con Kubernetes
