@@ -278,7 +278,11 @@ class KubeSpawnerServicer(kubespawner_pb2_grpc.KubeSpawnerServicesServicer):
             start_time = response.start_time.strftime("%Y-%m-%dT%H:%M:%S") if response.start_time else ""
             completion_time = response.completion_time.strftime("%Y-%m-%dT%H:%M:%S") if response.completion_time else ""
             # extract completion time
-            for condition in response.conditions:
+            conditions = response.conditions
+            if conditions is None:
+                conditions = []
+
+            for condition in conditions:
                 if condition.type == "Failed":
                     completion_time = condition.last_transition_time.strftime("%Y-%m-%dT%H:%M:%S")
 
